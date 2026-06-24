@@ -18,18 +18,31 @@ export default function ProductList() {
   const [cursorHistory, setCursorHistory] = useState([]);
 
   // 1. Fetching from standard cursor browse API
-  const fetchStandardFeed = async (cursorObj, direction) => {
+const fetchStandardFeed = async (cursorObj, direction) => {
     setLoading(true);
     setError(null);
     try {
-      let url = `https://paginationassingment.onrender.com`;
+      // 🎯 Fix 1: Add the explicit /products path name and a base question mark separator
+      let url = `https://paginationassingment.onrender.com/products?limit=20`;
+      
+      // If cursor metadata is present, safely append them using query dividers
       if (cursorObj.category && cursorObj.createdAt && cursorObj.id) {
-        url += `&cursor_category=${cursorObj.category}&cursor_created_at=${encodeURIComponent(cursorObj.createdAt)}&cursor_id=${cursorObj.id}`;
+        url += `&cursor_category=${encodeURIComponent(cursorObj.category)}&cursor_created_at=${encodeURIComponent(cursorObj.createdAt)}&cursor_id=${cursorObj.id}`;
       }
 
       const response = await axios.get(url);
-      const { data } = response.data;
-      setProducts(data);
+      
+      // 🎯 Fix 2: Dynamically unpack the data payload array based on how it comes back
+      let incomingData = [];
+      if (response.data && response.data.data) {
+        incomingData = response.data.data; // Handles the dictionary wrapper structure
+      } else if (Array.isArray(response.data)) {
+        incomingData = response.data;      // Handles a raw list structure fallback
+      } else {
+        incomingData = response.data?.products || [];
+      }
+      
+      setProducts(incomingData);
 
       if (direction === 'next') {
         setCursorHistory((prev) => [...prev, currentCursor]);
@@ -38,17 +51,21 @@ export default function ProductList() {
         setFeedPageNumber((prev) => prev - 1);
       }
 
-      if (data.length > 0) {
-        const lastItem = data[data.length - 1];
-        setCurrentCursor({ category: lastItem.category, createdAt: lastItem.created_at, id: lastItem.id });
+      if (incomingData.length > 0) {
+        const lastItem = incomingData[incomingData.length - 1];
+        setCurrentCursor({ 
+          category: lastItem.category, 
+          createdAt: lastItem.created_at, 
+          id: lastItem.id 
+        });
       }
     } catch (err) {
+      console.error("Feed error:", err);
       setError("Failed to load standard feed.");
     } finally {
       setLoading(false);
     }
   };
-
   // 2. Fetching from our dedicated search API route
   const fetchSearchResults = async (targetPage) => {
     setLoading(true);
