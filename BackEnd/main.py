@@ -40,9 +40,8 @@ app = FastAPI(lifespan=lifespan)
 origins = [
     "http://localhost:5173",
     "https://paginationassingment.onrender.com",
-    "https://pagination-assingment-ia7tg4jaw.vercel.app"  # 👈 Exact match, no trailing slash
+    "https://pagination-assingment-rdisuu3je.vercel.app"  # 👈 Add this exact link (NO trailing slash)
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,            # Allows requests from your React ports
