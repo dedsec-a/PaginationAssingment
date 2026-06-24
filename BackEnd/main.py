@@ -35,9 +35,12 @@ async def lifespan(app: FastAPI):
 
 # 3. Instantiate the core FastAPI application with the lifecycle hook
 app = FastAPI(lifespan=lifespan)
+# Inside BackEnd/main.py
+
 origins = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "https://paginationassingment.onrender.com",
+    "https://pagination-assingment-ia7tg4jaw.vercel.app"  # 👈 Exact match, no trailing slash
 ]
 
 app.add_middleware(
@@ -45,7 +48,7 @@ app.add_middleware(
     allow_origins=origins,            # Allows requests from your React ports
     allow_credentials=True,
     allow_methods=["*"],              # Allows all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],              # Allows all headers
+    allow_headers=["*"],              # Allows all headersz
 )
 
 # 4. Standard root diagnostic endpoint to verify everything is working
