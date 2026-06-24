@@ -22,7 +22,7 @@ export default function ProductList() {
     setLoading(true);
     setError(null);
     try {
-      let url = `http://127.0.0.1:8000/products?limit=20`;
+      let url = `https://paginationassingment.onrender.com`;
       if (cursorObj.category && cursorObj.createdAt && cursorObj.id) {
         url += `&cursor_category=${cursorObj.category}&cursor_created_at=${encodeURIComponent(cursorObj.createdAt)}&cursor_id=${cursorObj.id}`;
       }
@@ -54,7 +54,8 @@ export default function ProductList() {
     setLoading(true);
     setError(null);
     try {
-      const url = `http://127.0.0.1:8000/products/search?query=${encodeURIComponent(searchInput)}&page=${targetPage}&limit=20`;
+// ✅ Update this line to use your live Render domain!
+      const url = `https://paginationassingment.render.com/products/search?query=${encodeURIComponent(searchInput)}&page=${targetPage}&limit=20`;
       const response = await axios.get(url);
       setProducts(response.data.data);
       setSearchPage(targetPage);
