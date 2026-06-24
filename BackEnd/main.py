@@ -45,10 +45,10 @@ origins = [
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,            # Allows requests from your React ports
-    allow_credentials=True,
-    allow_methods=["*"],              # Allows all HTTP methods (GET, POST, etc.)
-    allow_headers=["*"],              # Allows all headersz
+    allow_origins=["*"],  # 🌍 Allows every single domain on the web to talk to your API
+    allow_credentials=False, # ⚠️ Note: Must be set to False if using allow_origins=["*"]
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # 4. Standard root diagnostic endpoint to verify everything is working
